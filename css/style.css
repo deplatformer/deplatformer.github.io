@@ -2,6 +2,7 @@ body {
   background-color: #379683;
   color: #000;
   font-family: "Kumbh Sans", sans-serif;
+  font-size: 120%;
 }
 
 body img{
@@ -17,3 +18,20 @@ body img{
 .section {
   padding-top: 100px;
 }
+
+.follow {
+    color: #FFF;
+    margin-top: 50px;
+}
+
+.follow a{
+    text-decoration: underline;
+    color: #FFF;
+
+}
+
+.follow a:hover{
+    color: #05386B;
+}
+
+    
