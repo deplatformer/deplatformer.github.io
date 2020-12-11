@@ -30,10 +30,10 @@ The Deplatformer Open Images project uses a Textile <a href="https://docs.textil
 <p>Use a <a href="https://en.wikipedia.org/wiki/Tar_(computing)">tar</a> archiving tool to unpack the downloaded file. Tar is one of the most common packaging formats in computing. There are multiple tools to open a tar package and most major operating systems have one installed by default.</p>
 
 <p>The Open Images dataset consists of 9,178,275 photographs. Each Deplatformer Open Images package contains between 300-400 of these photographs, the remaining space in the tar package is taken up by the JSON-LD file for each photograph and by PNG segmentation files (if they have been generated for a photograph by the Open Images project).
-When your archiving utility unpacks the tar file you will see a top-level directory named deplatformr-open-images-### where ### is the arbitrary, sequential number assigned to that package in Deplatformers digital preservation pipeline.</p>
+When your archiving utility unpacks the tar file you will see a top-level directory named deplatformr-open-images-### where ### is the arbitrary, sequential number assigned to that package in Deplatformer's digital preservation pipeline.</p>
 
 <h2>The Bagit container</h2>
-<p>This directory is organized into the Library of Congress Bagit container format to facilitate long-term storage and interoperability. You will see a "data" payload subdirectory containing the JPG photographs, JSON-LD files, and PNG segmentation files. You will also see the following files in the top-level directory:</p>
+<p>This directory is organized into the Library of Congress <a href="https://tools.ietf.org/html/rfc8493">Bagit</a> container format to facilitate long-term storage and interoperability. You will see a "data" payload subdirectory containing the JPG photographs, JSON-LD files, and PNG segmentation files. You will also see the following files in the top-level directory:</p>
 <ul>
 <li>bag-info.txt</li>
 <li>bagit.txt</li>
@@ -46,7 +46,7 @@ When your archiving utility unpacks the tar file you will see a top-level direct
 <h2>The package payload</h2>
 <p>Inside the "data" payload subdirectory you will find the Open Image photographs. These have been renamed from their Flickr original filename to use their unique Open Image identifier as their filename. Their corresponding JSON-LD manifest file uses the exact same name. So sorting the directory by name will group them together. Likewise, any <a href="https://en.wikipedia.org/wiki/Image_segmentation">segmentation</a> files that might have been generated for the photograph use the Open Image identifier as their filename prefix.</p>
 
-<p>The JSON-LD file contains all the metadata about the photographs derived from their corresponding Open Images CSV file rows and the extracted EXIF metadata. Depending on how the photograph was used in the Open Images project, the about section will contain all annotation tags generated for the photograph (labels, boxes, relationships, and segmentations) and their machine learning function (model training, model validation, or model testing).</p>
+<p>As shown in <a href="0a14d074d1428df1.jsonld">this example</a>, the JSON-LD file contains all the metadata about the photographs derived from their corresponding Open Images CSV file rows and the extracted EXIF metadata. Depending on how the photograph was used in the Open Images project, the about section will contain all annotation tags generated for the photograph (labels, boxes, relationships, and segmentations) and their machine learning function (model training, model validation, or model testing).</p>
 
 <h2>Cross-package searching</h2>
 <p>The Deplatformer project is maintaining a master index of all the Open Image photographs, their metadata, the specific package they are stored in, and the package's Filecoin CID. We will provide a web UI to search this index once we have uploaded the entire Open Images dataset, sometime before the end of the Slingshot competition.</p>
