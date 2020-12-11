@@ -1,7 +1,7 @@
 <html>
 <body>
 
-<h1>Open Images dataset</h1>
+<h1>The Open Images dataset</h1>
 <p>For the <a href="https://slingshot.filecoin.io/">Filecoin Slingshot</a> competition, the <a href="https://deplatformer.io">Deplatformer</a> project is storing the <a href="https://storage.googleapis.com/openimages/web/download.html">Open Images</a> dataset. We are liberating content from platforms like Facebook and Google Photos and moving it to Filecoin storage. A significant milestone on our roadmap is to use the Open Images machine learning dataset to train private AI models on our users' liberated data.</p>
 
 <p>Currently the Open Images dataset is split between photographs that are hosted on Flickr servers and a mixture of CSV files describing the dataset and its annotations. These CSV files are hosted on Google Cloud.</p>
@@ -14,16 +14,17 @@
 Therefore, the Deplatformer project created a digital preservation pipeline to archive the Open Images dataset using industry best practices in combination with Filecoin storage. We verified the MD5 checksum of every image downloaded from the Flickr servers. We retrieved the PNG overlay files for segmentations that are associated with many of the images. We combined the annotations metadata from all the disparate CSV sources into one manifest per image. We then extracted additional descriptive and technical EXIF metadata from the Open Images JPG files. This includes valuable geodata for approximately 3.5% of the images. All this metadata is organized into a <a href="https://json-ld.org/">JSON-LD</a> schema format that we developed specifically for this project from the schema.org <a href="https://schema.org/ImageObject">ImageObject</a> definition.
 
 <h2>Industry standard archival packaging</h2>
-<p>We store this <a href="https://open-images.deplatformr.com/static/instructions/sample-0c1653734a748a25.jsonld">metadata file</a> next to each source image inside a Library of Congress standard <a href="https://tools.ietf.org/html/rfc8493">Bagit</a> container for long-term archival storage. These Bagit containers include SHA512 checksums for all files. We bundle the images and metadata files into 800 MiB tar packages which become 1 GiB files exactly on the Filecoin network due to the "next power of 2" factor that is part of the Filecoin hashing and chunking algorithm. This avoids having to download extremely large packages to get to individual photographs. It also prevents wasting unused storage space and makes it easier to calculate Filecoin storage costs consistently.</p>
+<p>We store this <a href="0a14d074d1428df1.jsonld">metadata file</a> next to each source image inside a Library of Congress standard <a href="https://tools.ietf.org/html/rfc8493">Bagit</a> container for long-term archival storage. These Bagit containers include SHA512 checksums for all files. We bundle the images and metadata files into 800 MiB tar packages which become 1 GiB files exactly on the Filecoin network due to the "next power of 2" factor that is part of the Filecoin hashing and chunking algorithm. This avoids having to download extremely large packages to get to individual photographs. It also prevents wasting unused storage space and makes it easier to calculate Filecoin storage costs consistently.</p>
 
 <h2>Free and open source tooling</h2>
 The Deplatformer Open Images project uses a Textile <a href="https://docs.textile.io/powergate/">Powergate</a> server to upload these tar packages to the Filecoin network using the <a href="https://github.com/pygate/pygate-gRPC">Pygate</a> gRCP interface that our team developed for the Filecoin <a href="https://hackfs.com/">HackFS</a> event. In addition to Pygate, our entire pipeline is written in Python. Both Powergate and Pygate are FOSS tools. All the digital preservation pipeline and Pygate management scripts are available as Free Open Source Software under a MIT license in our <a href="https://github.com/deplatformr/open-images/tree/main/pipeline/scripts">Github repository</a>.</p>
 
 <h1>How to retrieve the dataset</h1>
-<p>The Deplatformer Slingshot deals CSV file contains the Filecoin CIDs for the Open Images tar packages. You can <a href="https://docs.filecoin.io/store/lotus/retrieve-data/">use a Lotus client</a> to retrieve the data from Filecoin by its CID:
-<p><span style="background: #999; font-family: monospace;">lotus client find [cid]</span></p>
+<p>The Deplatformer Slingshot deals CSV file contains the Filecoin CIDs for the Open Images tar packages.</p>
+<p>You can <a href="https://docs.filecoin.io/store/lotus/retrieve-data/">use a Lotus client</a> to retrieve the data from Filecoin by its CID:</p>
+<p><span style="background: #eee; padding: 3px; font-family: monospace;">lotus client find [cid]</span></p>
 <p>You can also <a href="https://docs.textile.io/powergate/cli/pow_data_get/">use a Powergate client</a> to retrieve the data from Filecoin by its CID:</p>
-<p><span style="background: #999; font-family: monospace;">pow data get [cid]</span></p>
+<p><span style="background: #eee; padding: 3px; font-family: monospace;">pow data get [cid]</span></p>
 
 <h2>The tar package</h2>
 <p>Use a <a href="https://en.wikipedia.org/wiki/Tar_(computing)">tar</a> archiving tool to unpack the downloaded file. Tar is one of the most common packaging formats in computing. There are multiple tools to open a tar package and most major operating systems have one installed by default.</p>
