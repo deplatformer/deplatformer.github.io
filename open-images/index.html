@@ -1,5 +1,54 @@
 <html>
-    <body>
-        <h1>Testing</h1>
-    </body>
+<body>
+
+<h1>Open Images dataset</h1>
+<p>For the <a href="https://slingshot.filecoin.io/">Filecoin Slingshot</a> competition, the <a href="https://deplatformer.io">Deplatformer</a> project is storing the <a href="https://storage.googleapis.com/openimages/web/download.html">Open Images</a> dataset. We are liberating content from platforms like Facebook and Google Photos and moving it to Filecoin storage. A significant milestone on our roadmap is to use the Open Images machine learning dataset to train private AI models on our users' liberated data.</p>
+
+<p>Currently the Open Images dataset is split between photographs that are hosted on Flickr servers and a mixture of CSV files describing the dataset and its annotations. These CSV files are hosted on Google Cloud.</p>
+
+<h1>How we processed the dataset</h1>
+<h2>Long-term accessibility concerns</h2>
+<p>Our Deplatformer team includes professional archivists who are concerned about the long-term digital preservation of the Open Images dataset. This is the largest public resource of this kind in the world. However, our statistics from Slingshot 1 reveal that at least 7% of the photographs on Flickr are no longer available for download. A Google representative from the project has told us that they expected this number to be even higher and that it will grow over the years as they have no control over users taking down their photographs, despite their Creative Commons licensing. Furthermore, the photographs are not inextricably linked to their content and context metadata, an important consideration for maintaining long-term accessibility.</p>
+
+<h2>Digital preservation pipeline</h2>
+Therefore, the Deplatformer project created a digital preservation pipeline to archive the Open Images dataset using industry best practices in combination with Filecoin storage. We verified the MD5 checksum of every image downloaded from the Flickr servers. We retrieved the PNG overlay files for segmentations that are associated with many of the images. We combined the annotations metadata from all the disparate CSV sources into one manifest per image. We then extracted additional descriptive and technical EXIF metadata from the Open Images JPG files. This includes valuable geodata for approximately 3.5% of the images. All this metadata is organized into a <a href="https://json-ld.org/">JSON-LD</a> schema format that we developed specifically for this project from the schema.org <a href="https://schema.org/ImageObject">ImageObject</a> definition.
+
+<h2>Industry standard archival packaging</h2>
+<p>We store this <a href="https://open-images.deplatformr.com/static/instructions/sample-0c1653734a748a25.jsonld">metadata file</a> next to each source image inside a Library of Congress standard <a href="https://tools.ietf.org/html/rfc8493">Bagit</a> container for long-term archival storage. These Bagit containers include SHA512 checksums for all files. We bundle the images and metadata files into 800 MiB tar packages which become 1 GiB files exactly on the Filecoin network due to the "next power of 2" factor that is part of the Filecoin hashing and chunking algorithm. This avoids having to download extremely large packages to get to individual photographs. It also prevents wasting unused storage space and makes it easier to calculate Filecoin storage costs consistently.</p>
+
+<h2>Free and open source tooling</h2>
+The Deplatformer Open Images project uses a Textile <a href="https://docs.textile.io/powergate/">Powergate</a> server to upload these tar packages to the Filecoin network using the <a href="https://github.com/pygate/pygate-gRPC">Pygate</a> gRCP interface that our team developed for the Filecoin <a href="https://hackfs.com/">HackFS</a> event. In addition to Pygate, our entire pipeline is written in Python. Both Powergate and Pygate are FOSS tools. All the digital preservation pipeline and Pygate management scripts are available as Free Open Source Software under a MIT license in our <a href="https://github.com/deplatformr/open-images/tree/main/pipeline/scripts">Github repository</a>.</p>
+
+<h1>How to retrieve the dataset</h1>
+<p>The Deplatformer Slingshot deals CSV file contains the Filecoin CIDs for the Open Images tar packages. You can <a href="https://docs.filecoin.io/store/lotus/retrieve-data/">use a Lotus client</a> to retrieve the data from Filecoin by its CID:
+<p><span style="background: #999; font-family: monospace;">lotus client find [cid]</span></p>
+<p>You can also <a href="https://docs.textile.io/powergate/cli/pow_data_get/">use a Powergate client</a> to retrieve the data from Filecoin by its CID:</p>
+<p><span style="background: #999; font-family: monospace;">pow data get [cid]</span></p>
+
+<h2>The tar package</h2>
+<p>Use a <a href="https://en.wikipedia.org/wiki/Tar_(computing)">tar</a> archiving tool to unpack the downloaded file. Tar is one of the most common packaging formats in computing. There are multiple tools to open a tar package and most major operating systems have one installed by default.</p>
+
+<p>The Open Images dataset consists of 9,178,275 photographs. Each Deplatformer Open Images package contains between 300-400 of these photographs, the remaining space in the tar package is taken up by the JSON-LD file for each photograph and by PNG segmentation files (if they have been generated for a photograph by the Open Images project).
+When your archiving utility unpacks the tar file you will see a top-level directory named deplatformr-open-images-### where ### is the arbitrary, sequential number assigned to that package in Deplatformers digital preservation pipeline.</p>
+
+<h2>The Bagit container</h2>
+<p>This directory is organized into the Library of Congress Bagit container format to facilitate long-term storage and interoperability. You will see a "data" payload subdirectory containing the JPG photographs, JSON-LD files, and PNG segmentation files. You will also see the following files in the top-level directory:</p>
+<ul>
+<li>bag-info.txt</li>
+<li>bagit.txt</li>
+<li>manifest-sha512.txt</li>
+<li>tagmanifest-sha512.txt</li>
+</ul>
+
+<p>The bag-info.txt files contains metadata describing the Bagit container. The bagit.txt file contains the version of the Bagit standard that has been implemented. The manifest-sha512.txt file contains checksums for every file in the data payload directory. The tagmanifest-sha512.txt file contains checksums for the files in the top directory.</p>
+
+<h2>The package payload</h2>
+<p>Inside the "data" payload subdirectory you will find the Open Image photographs. These have been renamed from their Flickr original filename to use their unique Open Image identifier as their filename. Their corresponding JSON-LD manifest file uses the exact same name. So sorting the directory by name will group them together. Likewise, any <a href="https://en.wikipedia.org/wiki/Image_segmentation">segmentation</a> files that might have been generated for the photograph use the Open Image identifier as their filename prefix.</p>
+
+<p>The JSON-LD file contains all the metadata about the photographs derived from their corresponding Open Images CSV file rows and the extracted EXIF metadata. Depending on how the photograph was used in the Open Images project, the about section will contain all annotation tags generated for the photograph (labels, boxes, relationships, and segmentations) and their machine learning function (model training, model validation, or model testing).</p>
+
+<h2>Cross-package searching</h2>
+<p>The Deplatformer project is maintaining a master index of all the Open Image photographs, their metadata, the specific package they are stored in, and the package's Filecoin CID. We will provide a web UI to search this index once we have uploaded the entire Open Images dataset, sometime before the end of the Slingshot competition.</p>
+
+</body>
 </html>
